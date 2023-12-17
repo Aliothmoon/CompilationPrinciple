@@ -23,14 +23,15 @@ namespace E3 {
     char token[20], token1[40];//token保存单词符号，token1保存单词值
     char Scanout[300], Codeout[300]; //保存词法分析输出文件名
     FILE *fp, *fout; //用于指向输入输出文件的指针
+
     struct VarSymbol {//定义符号表结构
-        string name;
+        string name; // 动态扩展符号名长度
         int address{};
         bool initialized{}; // 判断是否被赋初值
     };
 
 
-    map <string, VarSymbol> SymbolTable;
+    map <string, VarSymbol> SymbolTable; // 使用Hash结构的符号表
 
     //改符号表最多容纳maxvartablep个记录
 
@@ -64,6 +65,7 @@ namespace E3 {
 
 //        忽略判断初始化  ADDRESSABLE
         auto sname = string{name};
+//        检查符号表是否存在
         if (SymbolTable.count(sname)) {
             VarSymbol &symbol = SymbolTable[sname];
             paddress = symbol.address;

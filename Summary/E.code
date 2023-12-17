@@ -3,7 +3,12 @@ int sum;
 int mul;
 int i;
 read sum;
-sum = sum +1;
-mul = 1;
+read mul;
+for (i=1; i <= 10; i=i+1)
+{
+sum = i + sum;
+mul = i * mul;
+}
 write sum;
+write mul;
 }

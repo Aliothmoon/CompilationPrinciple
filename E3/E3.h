@@ -44,7 +44,7 @@ namespace E3 {
 
     int name_def(char *name);
 
-    int lookup(char *name, int *paddress, InitializationAction action);
+    int lookup(char *name, int &paddress, InitializationAction action);
 
     int run(const char *lex = nullptr, const char *ir = nullptr);
 
