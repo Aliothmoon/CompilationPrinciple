@@ -1,0 +1,72 @@
+Separator:{
+Reserved word:int
+Identifier:a
+Separator:;
+Reserved word:int
+Identifier:i
+Separator:;
+Reserved word:int
+Identifier:b
+Separator:;
+Reserved word:read
+Identifier:a
+Separator:;
+Reserved word:for
+Separator:(
+Identifier:i
+Operator:=
+Number:1
+Separator:;
+Identifier:i
+Operator:<=
+Number:9
+Separator:;
+Identifier:i
+Operator:=
+Identifier:i
+Operator:+
+Number:1
+Separator:)
+Separator:{
+Separator:;
+Reserved word:if
+Separator:(
+Identifier:a
+Operator:>
+Operator:=
+Identifier:i
+Separator:)
+Identifier:C
+Operator:=
+Identifier:a
+Operator:+
+Identifier:b
+Operator:+
+Separator:(
+Identifier:x
+Operator:*
+Identifier:y
+Separator:;
+Reserved word:else
+Identifier:a
+Operator:=
+Identifier:a
+Operator:+
+Identifier:i
+Separator:{
+Identifier:c
+Operator:=
+Identifier:a
+Operator:+
+Identifier:b
+Separator:;
+Separator:}
+Separator:}
+Separator:{
+Reserved word:write
+Identifier:b
+Operator:+
+Number:5
+Separator:;
+Separator:}
+Separator:}

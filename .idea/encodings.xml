@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/E1/E1.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/E1/E1.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/E2/E2.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/E3/E3.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/E3/Simulator.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/E3/Simulator.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/main.cpp" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/old/FF1.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/old/exp2.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/old/exp2pro.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/old/main.cpp" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/old/midcode.c" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/old/text.cpp" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
