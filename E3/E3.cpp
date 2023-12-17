@@ -48,25 +48,25 @@ namespace E3 {
         if (SymbolTable.count(sname)) {
             es = 22;//22表示变量重复声明
         }
-        if (es > 0) return (es);
+        if (es > 0) return es;
 //        新增符号项
         SymbolTable[sname] = VarSymbol{
                 sname, datap,
         };
         datap++;//分配一个单元，数据区指针加1
         vartablep++;
-        return (es);
+        return es;
     }
 
     //查询符号表返回地址
-    int lookup(char *name, int *paddress, InitializationAction action) {
+    int lookup(char *name, int &paddress, InitializationAction action) {
         int es = 0;
 
 //        忽略判断初始化  ADDRESSABLE
         auto sname = string{name};
         if (SymbolTable.count(sname)) {
             VarSymbol &symbol = SymbolTable[sname];
-            *paddress = symbol.address;
+            paddress = symbol.address;
             if (action == LEFT_VALUE && !symbol.initialized) {
                 DebugInfo("初始化", name);
                 symbol.initialized = true;
@@ -77,7 +77,7 @@ namespace E3 {
             return es;
         }
         es = 23;//变量没有声明
-        return (es);
+        return es;
     }
 
     //语法、语义分析及代码生成程序
@@ -132,7 +132,7 @@ namespace E3 {
         }
         fclose(fp);
         fclose(fout);
-        return (es);
+        return es;
     }
 
     //program::='{'<declaration_list><statement_list>'}'
@@ -142,19 +142,19 @@ namespace E3 {
         //判断是否'{'
         if (strcmp(token, "{") != 0) {
             es = 1;
-            return (es);
+            return es;
         }
         printf("%s %s\n", token, token1);
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = declaration_list();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         es = statement_list();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         //判断是否'}'
         if (strcmp(token, "}") != 0) {
             es = 2;
-            return (es);
+            return es;
         }
         fprintf(fout, "        STOP\n");//产生停止指令
 
@@ -168,7 +168,7 @@ namespace E3 {
         }
         puts("");
 
-        return (es);
+        return es;
     }
 
     //<declaration_list>::=
@@ -178,9 +178,9 @@ namespace E3 {
         int es = 0;
         while (strcmp(token, "int") == 0) {
             es = declaration_stat();
-            if (es > 0) return (es);
+            if (es > 0) return es;
         }
-        return (es);
+        return es;
     }
 
     //<declaration_stat>↓vartablep,datap,codep ->int ID↑n@name-def↓n,t;
@@ -190,13 +190,13 @@ namespace E3 {
         printf("%s %s\n", token, token1);
         if (strcmp(token, "ID")) return (es = 3);  //不是标识符
         es = name_def(token1);//插入符号表
-        if (es > 0) return (es);
+        if (es > 0) return es;
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         if (strcmp(token, ";") != 0) return (es = 4);
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
-        return (es);
+        return es;
     }
 
     //<statement_list>::=<statement_list><statement>|<statement>
@@ -209,9 +209,9 @@ namespace E3 {
                            strcmp(token, "{") == 0))   //判断first集合
         {
             es = statement();
-            if (es > 0) return (es);
+            if (es > 0) return es;
         }
-        return (es);
+        return es;
     }
 
     //<statement>::= <if_stat>|<while_stat>|<for_stat>
@@ -228,11 +228,11 @@ namespace E3 {
         if (es == 0 && strcmp(token, "{") == 0) {
             printf("AAA %s\n", token);
             es = compound_stat();
-            return (es);
+            return es;
         }  //!!<复合语句>执行后，应该马上返回，否则还会执行下一个if.
         if (es == 0 && (strcmp(token, "ID") == 0 || strcmp(token, "NUM") == 0 || strcmp(token, "(") == 0))
             es = expression_stat();//<表达式语句>
-        return (es);
+        return es;
     }
 
     //<IF_stat>::= if (<expr>) <statement > [else < statement >]
@@ -254,14 +254,14 @@ namespace E3 {
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = expression();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         if (strcmp(token, ")") != 0) return (es = 6); //少右括号
         label1 = labelp++;//用label1记住条件为假时要转向的标号
         fprintf(fout, "        BRF LABEL%d\n", label1);//输出假转移指令
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = statement();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         label2 = labelp++;//用label2记住要转向的标号
         fprintf(fout, "        BR LABEL%d\n", label2);//输出无条件转移指令
         fprintf(fout, "LABEL%d:\n", label1);//设置label1记住的标号
@@ -270,10 +270,10 @@ namespace E3 {
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
             es = statement();
-            if (es > 0) return (es);
+            if (es > 0) return es;
         }
         fprintf(fout, "LABEL%d:\n", label2);//设置label2记住的标号
-        return (es);
+        return es;
     }
 
     //<while_stat>::= while (<expr >) < statement >
@@ -294,17 +294,17 @@ namespace E3 {
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = expression();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         if (strcmp(token, ")") != 0) return (es = 6); //少右括号
         label2 = labelp++;
         fprintf(fout, "        BRF LABEL%d\n", label2);//输出假转移指令
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = statement();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         fprintf(fout, "        BR LABEL%d\n", label1);//输出无条件转移指令
         fprintf(fout, "LABEL%d:\n", label2);//设置label2标号
-        return (es);
+        return es;
     }
 
     //<for_stat>::= for(<expr>,<expr>,<expr>)<statement>
@@ -331,14 +331,14 @@ namespace E3 {
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = expression();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         if (strcmp(token, ";") != 0) return (es = 4);  //少分号
         label1 = labelp++;
         fprintf(fout, "LABEL%d:\n", label1);//设置label1标号
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = expression();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         label2 = labelp++;
         fprintf(fout, "        BRF LABEL%d\n", label2);//输出假条件转移指令
         label3 = labelp++;
@@ -349,17 +349,17 @@ namespace E3 {
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = expression();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         fprintf(fout, "        BR LABEL%d\n", label1);//输出无条件转移指令
         if (strcmp(token, ")") != 0) return (es = 6); //少右括号
         fprintf(fout, "LABEL%d:\n", label3);//设置label3标号
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = statement();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         fprintf(fout, "        BR LABEL%d\n", label4);//输出无条件转移指令
         fprintf(fout, "LABEL%d:\n", label2);//设置label2标号
-        return (es);
+        return es;
 
     }
 
@@ -373,12 +373,12 @@ namespace E3 {
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         es = expression();
-        if (es > 0)return (es);
+        if (es > 0)return es;
         if (strcmp(token, ";") != 0) return (es = 4);  //少分号
         fprintf(fout, "        OUT\n");//输出指令
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
-        return (es);
+        return es;
     }
 
     //<read_stat>::=read ID;
@@ -392,8 +392,8 @@ namespace E3 {
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
         if (strcmp(token, "ID") != 0) return (es = 3);  //少标识符
-        es = lookup(token1, &address, LEFT_VALUE);
-        if (es > 0) return (es);
+        es = lookup(token1, address, LEFT_VALUE);
+        if (es > 0) return es;
         fprintf(fout, "        IN   \n"); //输入指令
         fprintf(fout, "        STI   %d\n", address); //指令
         fscanf(fp, "%s %s\n", token, token1);
@@ -401,7 +401,7 @@ namespace E3 {
         if (strcmp(token, ";") != 0) return (es = 4);  //少分号
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
-        return (es);
+        return es;
     }
 
     //<compound_stat>::='{'<statement_list>'}'
@@ -416,7 +416,7 @@ namespace E3 {
             return (es = 8);
         fscanf(fp, "%s %s\n", token, token1);
         printf("%s %s\n", token, token1);
-        return (es);
+        return es;
     }
 
     //<expression_stat>::=<expression>;|;
@@ -425,17 +425,17 @@ namespace E3 {
         if (strcmp(token, ";") == 0) {
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
-            return (es);
+            return es;
         }
         es = expression();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         if (strcmp(token, ";") == 0) {
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
-            return (es);
+            return es;
         } else {
             es = 4;
-            return (es);//少分号
+            return es;//少分号
         }
     }
 
@@ -450,24 +450,24 @@ namespace E3 {
             if (strcmp(token2, "=") == 0) {
                 printf("%s %s\n", token2, token3);
                 int address;
-                es = lookup(token1, &address, ADDRESSABLE);
-                if (es > 0) return (es);
+                es = lookup(token1, address, ADDRESSABLE);
+                if (es > 0) return es;
                 strcpy(copy, token1);
                 fscanf(fp, "%s %s\n", token, token1);
                 printf("%s %s\n", token, token1);
                 es = bool_expr();
-                if (es > 0) return (es);
-                es = lookup(copy, &address, LEFT_VALUE);
+                if (es > 0) return es;
+                es = lookup(copy, address, LEFT_VALUE);
                 fprintf(fout, "        STO %d\n", address);
 
             } else {
                 fseek(fp, fileadd, 0); //若非'='则文件指针回到'='前的标识符
 //			printf("%s %s\n",token,token1);
                 es = bool_expr();
-                if (es > 0) return (es);
+                if (es > 0) return es;
             }
         } else es = bool_expr();
-        return (es);
+        return es;
     }
 
 
@@ -485,7 +485,7 @@ namespace E3 {
     int bool_expr() {
         int es = 0;
         es = additive_expr();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         if (strcmp(token, ">") == 0 || strcmp(token, ">=") == 0
             || strcmp(token, "<") == 0 || strcmp(token, "<=") == 0
             || strcmp(token, "==") == 0 || strcmp(token, "!=") == 0) {
@@ -494,7 +494,7 @@ namespace E3 {
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
             es = additive_expr();
-            if (es > 0) return (es);
+            if (es > 0) return es;
             if (strcmp(token2, ">") == 0) fprintf(fout, "        GT\n");
             if (strcmp(token2, ">=") == 0) fprintf(fout, "        GE\n");
             if (strcmp(token2, "<") == 0) fprintf(fout, "        LES\n");
@@ -502,7 +502,7 @@ namespace E3 {
             if (strcmp(token2, "==") == 0) fprintf(fout, "        EQ\n");
             if (strcmp(token2, "!=") == 0) fprintf(fout, "        NOTEQ\n");
         }
-        return (es);
+        return es;
     }
 
     //<additive_expr>::=<term>{(+|-)< term >}
@@ -511,18 +511,18 @@ namespace E3 {
     int additive_expr() {
         int es = 0;
         es = term();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         while (strcmp(token, "+") == 0 || strcmp(token, "-") == 0) {
             char token2[20];
             strcpy(token2, token);
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
             es = term();
-            if (es > 0) return (es);
+            if (es > 0) return es;
             if (strcmp(token2, "+") == 0) fprintf(fout, "        ADD\n");
             if (strcmp(token2, "-") == 0) fprintf(fout, "        SUB\n");
         }
-        return (es);
+        return es;
     }
 
     //< term >::=<factor>{(*| /)< factor >}
@@ -530,18 +530,18 @@ namespace E3 {
     int term() {
         int es = 0;
         es = factor();
-        if (es > 0) return (es);
+        if (es > 0) return es;
         while (strcmp(token, "*") == 0 || strcmp(token, "/") == 0) {
             char token2[20];
             strcpy(token2, token);
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
             es = factor();
-            if (es > 0) return (es);
+            if (es > 0) return es;
             if (strcmp(token2, "*") == 0) fprintf(fout, "        MULT\n");
             if (strcmp(token2, "/") == 0) fprintf(fout, "        DIV\n");
         }
-        return (es);
+        return es;
     }
 
     //< factor >::=(<additive_expr>)| ID|NUM
@@ -553,7 +553,7 @@ namespace E3 {
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
             es = expression();
-            if (es > 0) return (es);
+            if (es > 0) return es;
             if (strcmp(token, ")") != 0) return (es = 6); //少右括号
             fscanf(fp, "%s %s\n", token, token1);
             printf("%s %s\n", token, token1);
@@ -561,24 +561,24 @@ namespace E3 {
 
             if (strcmp(token, "ID") == 0) {
                 int address;
-                es = lookup(token1, &address, RIGHT_VALUE); //查符号表，获取变量地址
-                if (es > 0) return (es);//变量没声明
+                es = lookup(token1, address, RIGHT_VALUE); //查符号表，获取变量地址
+                if (es > 0) return es;//变量没声明
                 fprintf(fout, "        LOAD %d\n", address);
                 fscanf(fp, "%s %s\n", token, token1);
                 printf("%s %s\n", token, token1);
-                return (es);
+                return es;
             }
             if (strcmp(token, "NUM") == 0) {
                 fprintf(fout, "        LOADI %s\n", token1);
                 fscanf(fp, "%s %s\n", token, token1);
                 printf("%s %s\n", token, token1);
-                return (es);
+                return es;
             } else {
                 es = 7;//缺少操作数
-                return (es);
+                return es;
             }
         }
-        return (es);
+        return es;
     }
 
     int run(const char *lex, const char *ir) {
@@ -593,7 +593,7 @@ namespace E3 {
         if ((fp = fopen(Scanout, "r")) == nullptr) {
             printf("\n打开%s错误!\n", Scanout);
             es = 10;
-            return (es);
+            return es;
         }
 
         if (ir == nullptr) {
@@ -606,7 +606,7 @@ namespace E3 {
         if ((fout = fopen(Codeout, "w")) == nullptr) {
             printf("\n创建%s错误!\n", Codeout);
             es = 10;
-            return (es);
+            return es;
         }
 
         printf("========开始语法及语义分析========\n");
