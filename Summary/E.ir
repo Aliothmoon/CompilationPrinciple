@@ -1,38 +1,9 @@
         IN   
         STI   0
-        IN   
-        STI   1
         LOAD 0
-        OUT
-        LOAD 1
-        OUT
         LOADI 1
-        STO 2
-LABEL0:
-        LOAD 2
-        LOADI 10
-        LE
-        BRF LABEL1
-        BR LABEL2
-LABEL3:
-        LOAD 2
-        LOADI 1
-        ADD
-        STO 2
-        BR LABEL0
-LABEL2:
-        LOAD 2
-        LOAD 0
         ADD
         STO 0
-        LOAD 2
-        LOAD 1
-        MULT
+        LOADI 1
         STO 1
-        BR LABEL3
-LABEL1:
-        LOAD 0
-        OUT
-        LOAD 1
-        OUT
         STOP

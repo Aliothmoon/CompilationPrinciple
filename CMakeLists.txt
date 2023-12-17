@@ -4,15 +4,13 @@ project(Compile)
 set(CMAKE_CXX_STANDARD 14)
 
 add_executable(Compile old/main.cpp)
-add_executable(compile old/main.cpp
-        old/syntax.h)
+add_executable(compile old/main.cpp old/syntax.h)
 
 add_executable(own old/own.cpp)
 add_executable(own2 old/own2.cpp)
 add_executable(own3 old/own3.cpp)
 add_executable(syntax old/syntax.cpp)
-add_executable(exp2 old/exp2.cpp
-        old/syntax.h)
+add_executable(exp2 old/exp2.cpp old/syntax.h)
 add_executable(own4 old/own4.cpp)
 add_executable(exp2pro old/exp2pro.cpp)
 add_executable(SemanticMeaning old/SemanticMeaning.cpp)

@@ -5,8 +5,9 @@
 #include <cstdio>
 
 const char *JoinPath(const char *target);
-
+// 程序所在目录
 const char *ROOT_PATH = R"(E:\Projektes\Cpp\Compile)";
+
 const char *SourceProgramPath = JoinPath(R"(Summary\E.code)");
 const char *LexicalTextPath = JoinPath(R"(Summary\E.lex)");
 const char *IRPath = JoinPath(R"(Summary\E.ir)");
@@ -17,7 +18,7 @@ int main() {
 //    进行语法语义分析
     E3::run(LexicalTextPath, IRPath);
 //    模拟机运行
-    Simulator::emulate(IRPath);
+//    Simulator::emulate(IRPath);
 }
 
 const char *JoinPath(const char *target) {
