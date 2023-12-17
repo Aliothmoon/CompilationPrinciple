@@ -6,4 +6,6 @@
         STO 0
         LOADI 1
         STO 1
+        LOAD 0
+        OUT
         STOP

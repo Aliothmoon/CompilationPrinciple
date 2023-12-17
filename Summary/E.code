@@ -5,4 +5,5 @@ int i;
 read sum;
 sum = sum +1;
 mul = 1;
+write sum;
 }

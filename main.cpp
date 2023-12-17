@@ -18,7 +18,7 @@ int main() {
 //    进行语法语义分析
     E3::run(LexicalTextPath, IRPath);
 //    模拟机运行
-//    Simulator::emulate(IRPath);
+    Simulator::emulate(IRPath);
 }
 
 const char *JoinPath(const char *target) {

@@ -21,4 +21,7 @@ ID mul
 = =
 NUM 1
 ; ;
+write write
+ID sum
+; ;
 } }
