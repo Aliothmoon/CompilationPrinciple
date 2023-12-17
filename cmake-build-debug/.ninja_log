@@ -1,6 +1,0 @@
-# ninja log v5
-5	154	7245133317821871	CMakeFiles/start.dir/E3/Simulator.cpp.obj	dfee72160440d467
-3	140	7245114613551417	CMakeFiles/start.dir/E3/E3.cpp.obj	30d03717129618fc
-155	396	7245133320185360	start.exe	bad2bb4f7516cdb
-5	619	7245110996984796	CMakeFiles/start.dir/main.cpp.obj	847891ac09bb46fe
-4	652	7245117319196388	CMakeFiles/start.dir/E1/E1.cpp.obj	3e46ad60c3607503
